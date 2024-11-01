@@ -387,13 +387,13 @@ class DownloadFile {
 	/**
 	 * @param array $textIds
 	 * @param string $format
-	 * @return string
+	 * @return int
 	 */
 	private static function getHashForTextIds($textIds, $format = '') {
 		if (is_array($textIds)) {
 			$textIds = implode(',', $textIds);
 		}
-		return '0x' . substr(md5($textIds . $format), 0, 16);
+		return hexdec('0x' . substr(md5($textIds . $format), 0, 16));
 	}
 
 	/**
