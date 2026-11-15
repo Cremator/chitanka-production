@@ -9,6 +9,12 @@
  */
 
 $query = sanitizeInput($_SERVER['QUERY_STRING']);
+
+if (substr($query, -3) !== '.js') {
+	http_response_code(400);
+	die('no js');
+}
+
 $webdir = __DIR__.'/..';
 $path = "$webdir/cache/js";
 $combiFile = "$path/$query";
@@ -50,11 +56,13 @@ function createCombiFile($query, $combiName) {
 	if ( ! file_exists($dir)) {
 		mkdir($dir, 0777, true);
 	}
-	file_put_contents($combiName, $out);
+	if ($out) {
+		file_put_contents($combiName, $out);
+	}
 }
 
 function sanitizeInput($input) {
-	$input = preg_replace('#[^/a-zA-Z\d,._-]#', '', $input);
-	$input = strtr($input, ['..' => '.']);
+	$input = preg_replace('#[^a-zA-Z\d,._-]#', '', $input);
+	$input = preg_replace('#\.+#', '.', $input);
 	return $input;
 }
